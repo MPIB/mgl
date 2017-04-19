@@ -737,6 +737,7 @@ static Bool WaitForNotify(Display *d, XEvent *e, char *arg) {
 unsigned long openDisplay(double *displayNumber, int *screenWidth, int *screenHeight)
 {
   *displayNumber = floor(*displayNumber);
+  int verbose = (int)mglGetGlobalDouble("verbose");
 
   // This environment variable is necessary to get OpenGL to sync with vertical blank for Radeon cards.
   // Not optimal, of course! should be made system-independent.
@@ -777,10 +778,11 @@ unsigned long openDisplay(double *displayNumber, int *screenWidth, int *screenHe
   // get vertical refresh rate. should eventually implement video mode switching here.
   XF86VidModeModeLine modeline;
   int pixelclock;
+  double frameRate;
   XF86VidModeGetModeLine( dpy, *displayNumber, &pixelclock, &modeline );
   frameRate=(double) pixelclock*1000/modeline.htotal/modeline.vtotal;
   if (verbose)
-    mexPrintf("Vertical Refresh rate:%f Hz\n",*frameRate);
+    mexPrintf("Vertical Refresh rate:%f Hz\n",frameRate);
 
   int value[2];
   int event_base_return, error_base_return;

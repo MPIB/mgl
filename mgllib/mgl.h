@@ -108,10 +108,32 @@
 #include <GL/glext.h>
 #include <GL/glx.h>
 #include <GL/glu.h>
+#include <GL/glut.h>
 #include <X11/extensions/sync.h>
 #include <X11/extensions/xf86vmode.h>
 #include <sys/time.h>
+#include <fcntl.h>
+// oh boy...
+#define GL_TEXTURE_RECTANGLE_EXT GL_TEXTURE_2D
+bool mglCursorVisible = true;
+
+#ifndef FALSE
+#define FALSE 0
 #endif
+#ifndef TRUE
+#define TRUE 1
+#endif
+// from Mactypes.h ...
+struct Rect {
+    short   top;
+    short   left;
+    short   bottom;
+    short   right;
+};
+typedef struct Rect Rect;
+typedef Rect *RectPtr;
+
+#endif // __linux__
 
 #ifdef _WIN32
 #include <windows.h>

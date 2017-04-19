@@ -59,7 +59,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   if (enableMultisampling) {
     glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, mfboID);
     glBindFramebufferEXT(GL_DRAW_FRAMEBUFFER_EXT, fboID);
-    glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    //glBlitFramebufferEXT(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
   }
 
   // Unbind all framebuffer objects.

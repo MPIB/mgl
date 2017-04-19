@@ -250,16 +250,14 @@ Bool getGammaFormula(GAMMAVALUE *redMin,GAMMAVALUE *redMax,GAMMAVALUE *redGamma,
 ///////////////////////
 //   getGammaTable   //
 ///////////////////////
-Bool getGammaTable(int *gammaTableSize, GAMMAVALUE **redTable,GAMMAVALUE **greenTable,GAMMAVALUE *mgl*blueTable)
+Bool getGammaTable(int *gammaTableSize, GAMMAVALUE **redTable,GAMMAVALUE **greenTable,GAMMAVALUE **blueTable)
 {
-  int gammaTableSize;
-  
   int dpyptr=(int)mglGetGlobalDouble("XDisplayPointer");
-  if (dpyptr<=0) return;
+  if (dpyptr<=0) return(0);
   Display * dpy=(Display *)dpyptr;
   int screen =XDefaultScreen(dpy);
 
-  XF86VidModeGetGammaRampSize(dpy,screen,&gammaTableSize);
+  XF86VidModeGetGammaRampSize(dpy,screen,gammaTableSize);
 
   // allocate gamma ramps
   *redTable=(GAMMAVALUE *) malloc(sizeof(GAMMAVALUE)*(*gammaTableSize));
@@ -276,7 +274,7 @@ Bool getGammaTable(int *gammaTableSize, GAMMAVALUE **redTable,GAMMAVALUE **green
 Bool getGammaFormula(GAMMAVALUE *redMin,GAMMAVALUE *redMax,GAMMAVALUE *redGamma,GAMMAVALUE *greenMin,GAMMAVALUE *greenMax,GAMMAVALUE *greenGamma,GAMMAVALUE *blueMin,GAMMAVALUE *blueMax,GAMMAVALUE *blueGamma)
 {
   int dpyptr=(int)mglGetGlobalDouble("XDisplayPointer");
-  if (dpyptr<=0) return;
+  if (dpyptr<=0) return(0);
   Display * dpy=(Display *)dpyptr;
   int screen =XDefaultScreen(dpy);
 
@@ -289,7 +287,7 @@ Bool getGammaFormula(GAMMAVALUE *redMin,GAMMAVALUE *redMax,GAMMAVALUE *redGamma,
   // set function values
   *redMin = 0;*redMax = 1.0;*redGamma = gamma.red;
   *greenMin = 0;*greenMax = 1.0;*greenGamma = gamma.green;
-  *blueMin = 0;*blueMax = 1.0;*blueGamma = gamma.blue.;
+  *blueMin = 0;*blueMax = 1.0;*blueGamma = gamma.blue;
   return(1);
 }
 #endif//__linux__

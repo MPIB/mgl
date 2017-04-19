@@ -24,7 +24,7 @@ $Id$
 /////////////////////////
 //   OS Specific calls //
 /////////////////////////
-unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, Boolean fontBold, Boolean fontItalic, Boolean fontUnderline, Boolean fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect);
+unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, bool fontBold, bool fontItalic, bool fontUnderline, bool fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect);
 
 //////////////
 //   main   //
@@ -92,10 +92,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double fontRotation = mglGetGlobalDouble("fontRotation");
 
   // get font characteristics
-  Boolean fontBold = (Boolean)mglGetGlobalDouble("fontBold");
-  Boolean fontItalic = (Boolean)mglGetGlobalDouble("fontItalic");
-  Boolean fontStrikethrough = (Boolean)mglGetGlobalDouble("fontStrikeThrough");
-  Boolean fontUnderline = (Boolean)mglGetGlobalDouble("fontUnderline");
+  bool fontBold = (bool)mglGetGlobalDouble("fontBold");
+  bool fontItalic = (bool)mglGetGlobalDouble("fontItalic");
+  bool fontStrikethrough = (bool)mglGetGlobalDouble("fontStrikeThrough");
+  bool fontUnderline = (bool)mglGetGlobalDouble("fontUnderline");
 
   // now render the text into a bitmap.
   int pixelsWide = 0, pixelsHigh = 0;
@@ -207,7 +207,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 // ******************************* mac specific code  ******************************* //
 //-----------------------------------------------------------------------------------///
 #ifdef dontcompilethis //__MAC_10_8
-unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, Boolean fontBold, Boolean fontItalic, Boolean fontUnderline, Boolean fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect)
+unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, bool fontBold, bool fontItalic, bool fontUnderline, bool fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect)
 {
   // get text string
   int buflen = mxGetN(inputString)*mxGetM(inputString)+1;
@@ -352,7 +352,7 @@ unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSiz
   //  return [bitMapRep bitmapData];
 }
 #else // __MAC_10_6
-unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, Boolean fontBold, Boolean fontItalic, Boolean fontUnderline, Boolean fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect)
+unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, bool fontBold, bool fontItalic, bool fontUnderline, bool fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect)
 {
   // get text string
   int buflen = mxGetN(inputString)*mxGetM(inputString)+1;
@@ -437,25 +437,25 @@ unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSiz
   
   // set bold
   tags[0] = kATSUQDBoldfaceTag;
-  sizes[0] = sizeof(Boolean);
+  sizes[0] = sizeof(bool);
   values[0] = &fontBold;
   verify_noerr( ATSUSetAttributes(style, 1, tags, sizes, values) );
 
   // set italic
   tags[0] = kATSUQDItalicTag;
-  sizes[0] = sizeof(Boolean);
+  sizes[0] = sizeof(bool);
   values[0] = &fontItalic;
   verify_noerr( ATSUSetAttributes(style, 1, tags, sizes, values) );
 
   // set strike-through
   tags[0] = kATSUStyleStrikeThroughTag;
-  sizes[0] = sizeof(Boolean);
+  sizes[0] = sizeof(bool);
   values[0] = &fontStrikethrough;
   verify_noerr( ATSUSetAttributes(style, 1, tags, sizes, values) );
 
   // set strike-through
   tags[0] = kATSUQDUnderlineTag;
-  sizes[0] = sizeof(Boolean);
+  sizes[0] = sizeof(bool);
   values[0] = &fontUnderline;
   verify_noerr( ATSUSetAttributes(style, 1, tags, sizes, values) );
 
@@ -693,7 +693,7 @@ void draw_bitmap( FT_Bitmap* bitmap, FT_Int x, FT_Int y, unsigned char *image, i
 ////////////////////
 //   renderText   //
 ////////////////////
-unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, Boolean fontBold, Boolean fontItalic, Boolean fontUnderline, Boolean fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect)
+unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSize, double *fontColor, double fontRotation, bool fontBold, bool fontItalic, bool fontUnderline, bool fontStrikethrough, int *pixelsWide, int *pixelsHigh, Rect *textImageRect)
 {
 
   FT_Library    library;
@@ -710,12 +710,22 @@ unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSiz
   int           n, num_chars;
 
 
-  num_chars     = strlen( inputString );
   angle         = ( fontRotation / 360 ) * 3.14159 * 2;      /* use 25 degrees     */
-  target_height = HEIGHT;
-  target_width = ;
+  target_height = *pixelsHigh;
+  target_width = *pixelsWide;
 
   unsigned char * target_bitmap=(unsigned char *)malloc(target_height*target_width); 
+
+  // get text string
+  int buflen = mxGetN(inputString)*mxGetM(inputString)+1;
+  char *cInputString= (char*)malloc(buflen);
+  if (cInputString == NULL) {
+    mexPrintf("(mglText) Could not allocate buffer for string array of length %i\n",buflen);
+    return(NULL);
+  }
+  // get the string
+  mxGetString(inputString, cInputString, buflen);
+  num_chars = strlen( cInputString );
 
   error = FT_Init_FreeType( &library );              /* initialize library */
   /* error handling omitted */
@@ -747,7 +757,7 @@ unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSiz
     FT_Set_Transform( face, &matrix, &pen );
 
     /* load glyph image into the slot (erase previous one) */
-    error = FT_Load_Char( face, inputString[n], FT_LOAD_RENDER );
+    error = FT_Load_Char( face, cInputString[n], FT_LOAD_RENDER );
     if ( error )
       continue;                 /* ignore errors */
 
@@ -767,12 +777,12 @@ unsigned char *renderText(const mxArray *inputString, char*fontName, int fontSiz
   // Convert text bitmap to RGBA texture map
   GLubyte * textureBitmap = (GLubyte *)malloc(target_height*target_width*sizeof(GLubyte)*4);
 
-mglM  int offs;
+  int offs;
   for (int j=0; j<target_height; j++)
     for (int i=0; i<target_width; i++) {
       offs=sub2indC(j,i,target_width,1);
       for (int k=0; k<4; k++) {
-	tetxureBitmap[offs+k]=(GLubyte) target_bitmap[offs];
+	    textureBitmap[offs+k]=(GLubyte) target_bitmap[offs];
       }
     }
   
@@ -784,6 +794,7 @@ mglM  int offs;
 
   free(target_bitmap);
   free(textureBitmap);
+  free(cInputString);
 
   
 }

@@ -195,6 +195,8 @@ elseif ispc
   % mgl.h and compile flags are set here.  The default mex setup file
   % should fill in the rest.
   optf = '-largeArrayDims COMPFLAGS="$COMPFLAGS /TP"';
+else
+  optf = '-lGL -lGLU -lglut -lX11 -lXxf86vm -lXext -lfreetype -I/usr/include/freetype2/';
 end
 
 % just display what version is being used
@@ -297,6 +299,7 @@ elseif ~digio
         disp(['Error compiling ' sourcefile(i).name]);
         disp(err.message);
         disp(err.identifier);
+        break;
       end
     else
       disp(sprintf('%s is up to date',sourcefile(i).name));

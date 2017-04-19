@@ -362,4 +362,8 @@ void setVolume(double *volume, int numChannels)
 {
   mexPrintf("(mglPrivateVolume) Not implemented\n");
 }
+int getVolume(double **volume,int *numChannels)
+{
+  mexPrintf("(mglPrivateVolume) Not implemented\n");
+}
 #endif//__linux__

@@ -81,19 +81,25 @@ void hideCursor()
 // ****************************** linux specific code  ****************************** //
 //-----------------------------------------------------------------------------------///
 #ifdef __linux__
-#error Linux version undefined
+//#error Linux version undefined
+extern bool mglCursorVisible;
 
 ////////////////////
 //   showCursor   //
 ////////////////////
 void showCursor()
 {
+  // there is no glutGetCursor() or similar, so we just keep state..
+  glutSetCursor(GLUT_CURSOR_RIGHT_ARROW);
+  mglCursorVisible = true;
 }
 ////////////////////
 //   hideCursor   //
 ////////////////////
 void hideCursor()
 {
+  glutSetCursor(GLUT_CURSOR_NONE);
+  mglCursorVisible = false;
 }
 #endif
 

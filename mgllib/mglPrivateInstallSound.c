@@ -319,7 +319,7 @@ unsigned long installSound(char *filename)
   return 0;
 }
 
-unsigned long installSoundFromData(int *data)
+unsigned long installSoundFromData(int *d,unsigned int nChannels,unsigned int nSamples)
 {
   mexPrintf("(mglInstallSound) Not implemented on linux\n");
   return 0;

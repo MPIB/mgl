@@ -50,7 +50,12 @@ bool isCursorVisible()
 // ******************************* Linux specific code ********************************//
 //-------------------------------------------------------------------------------------//
 #ifdef __linux__
-#error Linux version undefined
+//#error Linux version undefined
+extern bool mglCursorVisible;
+bool isCursorVisible()
+{
+  return mglCursorVisible;
+}
 #endif
 
 //-------------------------------------------------------------------------------------//

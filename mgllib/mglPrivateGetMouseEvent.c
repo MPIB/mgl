@@ -115,7 +115,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   // create output structure
-  plhs[0] = makeOutputStructure(&outptrCharCode,&outptrKeyCode,&outptrKeyboard,&outptrWhen);
+  //plhs[0] = makeOutputStructure(&outptrCharCode,&outptrKeyCode,&outptrKeyboard,&outptrWhen);
+  plhs[0] = makeOutputStructure(&outptrX,&outptrY,&outptrButton,&outptrWhen);
  
   if ( buttonPressed ) {
     // create the output structure
